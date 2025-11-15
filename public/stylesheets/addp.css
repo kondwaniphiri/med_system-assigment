@@ -1,0 +1,73 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+#addPatientTable{
+    width: 100%;
+    font-family: sans-serif;
+    margin-bottom: 100px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+#addPatientTable .input{
+    width: 45%;
+    margin-left: 27.5%;
+    box-shadow: 0 0 5px black;
+    margin-top: 50px;
+    padding-bottom: 30px;
+}
+#addPatientTable h2{
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    background-color: rgb(34, 137, 255);
+    color: white;
+    margin-bottom: 30px;
+}
+
+#addPatientTable h1{
+    margin: 2% 0 10px 10%;
+    font-size: 17px;
+    color: rgb(31, 44, 65);
+}
+#addPatientTable input{
+    margin-left: 20%;
+    margin-bottom: 15px;
+    padding: 5px;
+    width: 35%;
+    border: none;
+    border-bottom: 1px solid rgb(20, 37, 48);
+}
+
+#addPatientTable .buttons{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-left: 2%;
+    margin-top: 100px;
+}
+#addPatientTable button{
+    padding: 30px 40px;
+    margin-top: 15px;
+    margin-left: 20px;
+    transition: all ease-in-out 1s;
+}
+#addPatientTable button:hover{
+    font-weight: bold;
+    cursor: pointer;
+    transition: all ease-in-out 1s;
+    border: rgb(31, 44, 65) 2px solid;
+    color: rgb(31, 44, 65);
+}
+.buttons div{
+    display: flex;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+

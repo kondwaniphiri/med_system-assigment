@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient</title>
+    <link rel="stylesheet" href="stylesheets/addp.css">
+    <script src="javascripts/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <div id="addPatientTable" >
+        <div class="input">
+        <h2>Add Patient</h1>
+        <h1 id="h1Id">ID</h1>
+        <input type="text" required name="" id="searchId" onkeydown="focusNext(event,'firstName','searchId')">
+        <h1>First Name</h1>
+        <input type="text" name="" required id="firstName" onkeydown="focusNext(event,'surname','searchId')">
+        <h1>Surname</h1>
+        <input type="text" name="" required id="surname" onkeydown="focusNext(event,'insurance','firstName')">
+        <h1>Insurance Company Name</h1>
+        <input type="text" name="" required id="insurance"  onkeydown="focusNext(event,'phone','surname')">
+        <h1>Phone Number</h1>
+        <input type="number" name="" required id="phone" onkeydown="focusNext(event,'street','insurance')">
+        <h1>Street</h1>
+        <input type="text" name="" required id="street" onkeydown="focusNext(event,'town','phone')">
+        <h1>Town</h1>
+        <input type="text" name="" required id="town" onkeydown="focusNext(event,'province','street')">
+        <h1>Province</h1>
+        <input type="text" name="" required id="province" onkeydown="focusNext(event,'province','town')">
+        </div>
+<div class="buttons">
+    <button onclick="addPatient()" id="addSubmit">Add</button>
+    <div><input type="checkbox" id="enable"><label for="enable">Enable Update & Delete</span></div>
+    <button onclick="updatePatient()">Update</button>
+    <button onclick="deletePatient()">Delete</button>
+    <button class="clear">Clear</button>
+    
+</div>
+<div>
+
+
+    <script src="javascripts/addp.js"></script>
+</body>
+</html>

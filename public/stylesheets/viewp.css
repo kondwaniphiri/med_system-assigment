@@ -1,0 +1,126 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+section{
+    width: 100%;
+    margin-top: 100px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* section 0 */
+
+.section0{
+    width: 100%;
+    border-radius: solid 1px gray;
+    margin-bottom: 20px;
+    display: flex;
+    align-content: flex-start;
+    padding-left: 7%;
+}
+.section0 .radio label{
+    margin-right: 20px;
+    font-family: sans-serif;
+    color: rgb(31, 44, 65);
+    font-weight: bold;
+    font-size: 13px;
+}
+.section0 .radio input:hover{
+    cursor: pointer;
+}
+.section0 .radio{
+    margin-left: 5%;
+}
+.section0 #search{
+    width: 20%;
+    padding: 2px;
+    padding-left: 10px;
+}
+/* section 0 */
+
+
+
+/* section one */
+.section1{
+    width: 50%;
+    margin-left: 6.7%;
+    min-height: 70vh;
+}
+
+.contentTable{
+    border-collapse: collapse;
+    font-size: 14px;
+    width: 100%;
+    font-family: sans-serif;
+    border-radius: 7px;
+    overflow: hidden;
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.295);
+}
+
+.contentTable thead tr{
+    background-color: rgb(34, 137, 255);
+    margin-top: 10px;
+    color: white;
+    text-align: left;
+    font-weight: bold;
+}
+.contentTable th{
+    padding: 10px 5px 10px 5px;
+}
+.contentTable td{
+    padding: 9px 5px 9px;
+    font-size: 12px;
+}
+.contentTable td tr .activeRow{
+    font-weight: bold;
+    color: rgb(34, 137, 255);
+}
+.contentTable tbody tr{
+    border-bottom: 1px rgba(128, 128, 128, 0.562) solid;
+    color: rgb(31, 44, 65);
+}
+.contentTable tbody tr:hover{
+    color: rgb(34, 137, 255);
+    font-weight: bold;
+    cursor: pointer;
+}
+.contentTable tbody tr:nth-of-type(even){
+    background-color: rgba(1, 77, 139, 0.123);
+}
+.contentTable tbody tr:last-of-type{
+    border-bottom: 2px solid rgb(34, 137, 255);
+}
+/* section one */
+.section2{
+    width: 35%;
+    margin-left: 5%;
+    min-height: 70vh;
+}
+.section2 .img{
+    width: 25%;
+    height: 100px;
+    background-color: rgb(104, 134, 173);
+    margin-left: 70%;
+}
+.section2 .details{
+    margin-left: 7%;
+}
+.section2 h1{
+    font-family: sans-serif;
+    color: rgb(12, 23, 43);
+}
+.section2 h3{
+    font-family: sans-serif;
+    font-size: 13px;
+    margin-bottom: 5x;
+    margin-top: 10px;
+    font-weight: bold;
+    color: rgb(9, 24, 49);
+}
+.section2 span{
+    color: rgb(31, 44, 65);
+}

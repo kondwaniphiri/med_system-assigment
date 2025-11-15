@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments</title>
+    <link rel="stylesheet" href="stylesheets/managep.css">
+    <link rel="stylesheet" href="stylesheets/appointment.css">
+    <script src="javascripts/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="toggled">
+    <div><input checked name="toggle" value="staff" type="radio" id="staff"  onclick="patientStaff()">
+    <label for="staff"> Staff</label></div>
+    <div><input name="toggle" value="patient" type="radio" id="patient" onclick="patientStaff()">
+    <label for="patient"> Patient</label></div>
+</div>
+
+<!-- Patietnts table -->
+<section class="patientTable">
+    <div class="section0">
+        <input type="text" placeholder="Search" id="search">
+        <div class="radio">
+            <input checked name="search" value="id" type="radio" id="id">
+            <label for="id"> ID</label>
+            <input name="search" value="name" type="radio" id="name">
+            <label for="name"> Name</label>
+            <input name="search" value="insurance" type="radio" id="insurance">
+            <label for="insurance"> Insurance</label>
+        </div>
+    </div>
+    <div class="section1">
+    <table class="contentTable">
+        <thead>
+        <tr>
+           <th> ID </th>
+           <th> First Name </th>
+            <th>Surname</th>
+            <th>Insurance</th>
+            <th>Phone</th>
+            <th>Street</th>
+            <th>Town</th>
+            <th>Province</th>
+        </tr>
+    </thead>
+        <tbody id="viewp">
+        </tbody>
+    </table>
+    </div>
+</section>
+<!-- Patietnts table -->
+
+<!-- Staff table -->
+<section class="staffTable">
+    <div class="section0">
+        <input type="text" placeholder="Search" id="search">
+        <div class="radio">
+            <input checked name="search" value="id" type="radio" id="id">
+            <label for="id"> ID</label>
+            <input name="search" value="name" type="radio" id="name">
+            <label for="name"> Name</label>
+            <input name="search" value="SSN" type="radio" id="SSN">
+            <label for="SSN"> SSN</label>
+        </div>
+    </div>
+    <div class="section1">
+    <table class="contentTable">
+        <thead>
+        <tr>
+           <th> ID </th>
+           <th> First Name </th>
+            <th>Surname</th>
+            <th>Postion</th>
+            <th>Street</th>
+            <th>Town</th>
+            <th>Province</th>
+            <th>SSN</th>
+        </tr>
+    </thead>
+        <tbody id="viewe">
+        </tbody>
+    </table>
+    </div>
+</section>
+<!-- Staff table -->
+
+<!-- Left side -->
+<section class='rightSide'>
+    <div class="patient">
+        <div class="patientData">
+            <h1>Patient Appointments</h1>
+            <span>Patient Id: </span>
+            <span class="patientId">-</span><br><br>
+            <span>Patient Name: </span>
+            <span class="patientName">-</span>
+        </div>
+        <div class="patientApps">
+            <div class="ward">
+                <span>Ward: </span><span>-</span>
+            </div>
+            <div class="doctors">
+                <span>Dr. </span><span>Name, </span><span>Id </span><button>Delete</button>
+            </div>
+            <div class="nurses">
+                <span>Nurse. </span><span>Name, </span><span>Id </span><button>Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="doctor">
+        <div class="staffData">
+            <h1>Doctor Appointments</h1>
+            <span>Staff Id: </span>
+            <span class="staffId">-</span><br><br>
+            <span>Doctor Name: </span>
+            <span class="staffName">-</span>
+        </div>
+        <div class="doctorApps">
+            <div class="patients">
+            <span>Name, </span><span>Id </span><button>Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="nurse">
+        <div class="staffData">
+            <h1>Nurse Appointments</h1>
+            <span>Staff Id: </span>
+            <span class="staffId1">-</span><br><br>
+            <span>Nurse Name: </span>
+            <span class="staffName1">-</span>
+        </div>
+        <div class="nurseApps">
+            <div class="nursePatients">
+            <span>Name, </span><span>Id </span><button>Delete</button>
+            </div>
+            <div class="wards">
+                <span>Ward, </span><span>Id </span><button>Delete</button>
+                </div>
+        </div>
+    </div>
+</section>
+<!-- Left side -->
+<script src="javascripts/appointments.js"></script>
+<script src="javascripts/viewe.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Patient</title>
+    <link rel="stylesheet" href="stylesheets/viewp.css">
+    <script src="javascripts/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+
+
+
+<section>
+<div class="section0">
+    <input type="text" placeholder="Search" id="search">
+    <div class="radio">
+        <input checked name="search" value="id" type="radio" id="id">
+        <label for="id"> ID</label>
+        <input name="search" value="name" type="radio" id="name">
+        <label for="name"> Name</label>
+        <input name="search" value="insurance" type="radio" id="insurance">
+        <label for="insurance"> Insurance</label>
+    </div>
+</div>
+<div class="section1">
+<table class="contentTable">
+    <thead>
+    <tr>
+       <th> ID </th>
+       <th> First Name </th>
+        <th>Last Name</th>
+        <th>Insurance Name</th>
+        <th>Phone</th>
+        <th>Street</th>
+        <th>Town</th>
+        <th>Province</th>
+    </tr>
+</thead>
+    <tbody id="viewp">
+    </tbody>
+</table>
+
+</div>
+<div class="section2">
+<h1>Patient Details</h1>
+<div class="img"></div>
+<div class="details">
+    <h3>ID</h3><span class="lId">-</span>
+    <h3>First Name</h3> <span class="lFirstName">-</span>
+    <h3>Surname</h3><span class="lSurname">-</span>
+    <h3>Insurance Company Name</h3> <span class="lInsurance">-</span>
+    <h3>Phone</h3> <span class="lPhone">-</span>
+    <h3>Street</h3> <span class="lStreet">-</span>
+    <h3>Town</h3> <span class="lTown">-</span>
+    <h3>Province</h3> <span class="lProvince">-</span>
+    
+</div>
+</div>
+</section>
+
+<script src="javascripts/viewp.js"></script>
+
+</body>
+</html>

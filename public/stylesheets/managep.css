@@ -1,0 +1,172 @@
+section{
+    width: 100%;
+    margin-top: 100px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* section 0 */
+
+.section0{
+    width: 100%;
+    border-radius: solid 1px gray;
+    margin-bottom: 20px;
+    display: flex;
+    align-content: flex-start;
+    padding-left: 7%;
+}
+.section0 .radio label{
+    margin-right: 20px;
+    font-family: sans-serif;
+    color: rgb(31, 44, 65);
+    font-weight: bold;
+    font-size: 13px;
+}
+.section0 .radio input:hover{
+    cursor: pointer;
+}
+.section0 .radio{
+    margin-left: 5%;
+}
+.section0 #search{
+    width: 20%;
+    padding: 2px;
+    padding-left: 10px;
+}
+/* section 0 */
+
+
+
+/* section one */
+.section1{
+    width: 50%;
+    margin-left: 6.7%;
+    min-height: 70vh;
+}
+
+.contentTable{
+    border-collapse: collapse;
+    font-size: 14px;
+    width: 100%;
+    font-family: sans-serif;
+    border-radius: 7px;
+    overflow: hidden;
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.295);
+}
+
+.contentTable thead tr{
+    background-color: rgb(34, 137, 255);
+    margin-top: 10px;
+    color: white;
+    text-align: left;
+    font-weight: bold;
+}
+.contentTable th{
+    padding: 10px 5px 10px 5px;
+}
+.contentTable td{
+    padding: 9px 5px 9px;
+    font-size: 12px;
+}
+.contentTable td tr .activeRow{
+    font-weight: bold;
+    color: rgb(34, 137, 255);
+}
+.contentTable tbody tr{
+    border-bottom: 1px rgba(128, 128, 128, 0.562) solid;
+    color: rgb(31, 44, 65);
+}
+.contentTable tbody tr:hover{
+    color: rgb(34, 137, 255);
+    font-weight: bold;
+    cursor: pointer;
+}
+.contentTable tbody tr:nth-of-type(even){
+    background-color: rgba(1, 77, 139, 0.123);
+}
+.contentTable tbody tr:last-of-type{
+    border-bottom: 2px solid rgb(34, 137, 255);
+}
+/* section one */
+.section0{
+    width: 100%;
+    border-radius: solid 1px gray;
+    margin-bottom: 20px;
+    display: flex;
+    align-content: flex-start;
+    padding-left: 7%;
+}
+.section0 .radio label{
+    margin-right: 20px;
+    font-family: sans-serif;
+    color: rgb(31, 44, 65);
+    font-weight: bold;
+    font-size: 13px;
+}
+.section0 .radio input:hover{
+    cursor: pointer;
+}
+.section0 .radio{
+    margin-left: 5%;
+}
+.section0 #search{
+    width: 15%;
+    padding: 2px;
+    padding-left: 10px;
+}
+/* 
+
+
+/* ASsigment Sections */
+
+.assignmentSection{
+    width: 43.3%;
+}
+.assignmentSection .patient{
+    margin-left: 10%;
+}
+.assignmentSection h1{
+    font-family: sans-serif;
+    color: rgb(12, 23, 43);
+    font-size: 25px;
+}
+.details{
+    margin-top: 30px;
+    margin-left: 4%;
+}
+.details h3{
+    font-family: sans-serif;
+    font-size: 13px;
+    margin-bottom: 5x;
+    margin-top: 10px;
+    font-weight: bold;
+    color: rgb(9, 24, 49);
+}
+
+.patient-ward{
+    margin-top: 30px;
+    padding-left: 8%;
+    border-top: 1px solid gray;
+    box-shadow: rgba(0, 0, 0, 0.479) 0px 0px 1px;
+    padding-top: 10px;
+    padding-bottom: 20px; 
+    font-family: sans-serif;
+    width:80%
+}
+.patient-ward h2{
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+.patient-ward span, h3 span{
+    font-size: 13px;
+    font-family: sans-serif;
+}
+.patient-ward button{
+    padding: 5px;
+    font-size: 15px;
+    margin-top: 50px;
+}
+.patient-ward{
+    padding: 2px 15px;
+}
+/* ASsigment Sections */

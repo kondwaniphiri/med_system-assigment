@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="stylesheets/home.css">
+    <script src="javascripts/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <nav>
+        <h1>HOSPITAL MANAGEMENT SYSTEM</h1>
+        <img src="images/img.png" alt="">
+    </nav>
+<div class="line">
+    <span>Logged in as: </span><span class="user">-</span><br>
+    <span>ID: </span> <span class="id">-</span> <br>
+    <span>Position: </span> <span class="pos">-</span> <br><br>
+
+    <button class="showAddUser">Add User</button><br>
+    <a href="/"><button class="logout">Logout</button></a>
+</div>
+
+<div class="wrapper">
+<form action="" class="addUser">
+    <span class="close">x</span>
+    <h1>User Name</h1>
+    <input type="text" class="usernameField">
+    <h1>Position</h1>
+    <input type="text" list="positions" class="positionsField">
+    <datalist id="positions">
+        <option value="admin"></option>
+        <option value="Human Resource"></option>
+        <option value="Doctor"></option>
+        <option value="Supervisor"></option>
+    </datalist>
+    <h1>Password</h1>
+    <input type="password" class="p1">
+    <h1>Re-enter Password</h1>
+    <input type="password" class="p2">
+    <span class="message">-</span>
+    <input type="submit" name="" class="addSubmit">
+</form>
+</div>
+    <div class="menu">
+        <div class="item 1">
+            <a href="/viewp">
+            <img src="images/viewp.svg" alt="">
+            <h1>View Patient</h1>
+            </a>
+        </div>
+        <div class="item 2">
+            <a href="/addp">
+            <img src="images/addp.svg" alt="">
+            <h1>Add Patient</h1>
+            </a>
+        </div>
+        <div class="item 3">
+            <a href="/managep">
+            <img src="images/managep.svg" alt="">
+            <h1>Manage Patient</h1>
+            </a>
+        </div>
+        <div class="item 4">
+            <a href="/viewe">
+            <img src="images/viewe.svg" alt="">
+            <h1>View Employee</h1>
+            </a>
+        </div>
+        <div class="item 5">
+            <a href="/adde">
+            <img src="images/adde.svg" alt="">
+            <h1>Add Employee</h1>
+            </a>
+        </div>
+        
+        <div class="item 6">
+            <a href="/managee">
+            <img src="images/managee.svg" alt="">
+            <h1>Manage Employee</h1>
+            </a>
+        </div>
+        <div class="item 7">
+            <a href="/appointments">
+            <img src="images/viewp.svg" alt="">
+            <h1>Appointments</h1>
+            </a>
+        </div>
+    </div>
+</body>
+
+<style>
+    body{
+        background: none;
+        padding-bottom: 200px;
+    }
+</style>
+<script>
+$(document).ready(function(){
+    $('.wrapper').hide();
+});
+$('.showAddUser').click(function(){
+    $('.wrapper').show(200);
+});
+$('.logout').click(function(){
+    localStorage.clear();
+})
+$('.close').click(function(){
+    $('.wrapper').hide(200);
+});
+$('.user').text(localStorage.getItem('username'));
+$('.id').text(localStorage.getItem('id'));
+$('.pos').text(localStorage.getItem('position'));
+
+
+if(!(($('.pos').text()=='admin')||($('.pos').text()=='Human Resource')||($('.pos').text()=='Supervisor'))){
+    $('.4').hide();
+    $('.5').hide();
+    $('.6').hide();
+    $('.showAddUser').hide();
+}
+
+$(document).ready(function(){
+    $('.addUser').submit(function(e){
+    e.preventDefault();
+    if(!($('.usernameField').val() == '') && !($('positionsField').val()=='')){
+        if($('.p1').val()==$('.p2').val()){
+            $('.message').text('');
+            alert('User added successfully');
+            $('.wrapper').hide();
+        }else {
+            $('.message').text('The Passwords do not match');
+        }
+    } else {
+        $('.message').text('Make Sure all fields are filled');
+    }
+
+})
+})
+
+</script>
+
+</html>

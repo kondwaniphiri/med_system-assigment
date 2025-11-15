@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <script src="javascripts/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <h1 class="welcome">
+    Hospital Management System
+  </h1>
+  <button class="login">Login</button>
+<h1 class="close">X</h1>
+<div class="wrapper">
+  <form action="">
+    <h1>Welcome</h1>
+    <input type="text" class="userName" name="userName" placeholder="Username">
+    <input type="password" class="password" name="password" placeholder="password">
+    <span class="message"></span>
+    <input type="submit" value="Login" name="" class="submit">
+  </form>
+</div>
+
+
+<script>
+$('.close').hide();
+$('.wrapper').hide();
+$('.message').hide();
+$('button').click(function(){
+  $('button').hide();
+  $('.wrapper').slideDown(200);
+  $('.close').slideDown(200);
+  $('.welcome').hide();
+
+})
+$('.close').click(function(){
+  $('.wrapper').hide();
+  $('.close').hide();
+  $('button').slideDown(200);
+  $('.welcome').slideDown(200);
+})
+
+$('.password, .userName').keydown(function(){
+  $('.message').hide();
+})
+
+
+$('form').submit(function(){
+  event.preventDefault();
+  let userName = $('.userName').val().toLowerCase();
+  let password = $('.password').val();
+
+   $.ajax({
+     url:"http://localhost:3000/database/action",
+     method:"POST",
+     data:{action:'login'},
+     dataType:'JSON',
+     success:function(data){
+         data = data.data;
+         let users = [];
+         for(let i=0; i<data.length;i++){
+          users.push(data[i].username.toLowerCase());
+      }
+      if(users.includes(userName)){
+        let index = users.indexOf(userName.toLowerCase());
+        if(userName===data[index].username.toLowerCase() && password === data[index].password){
+          location.href = '/home';
+          localStorage.setItem('username',data[index].username);
+          localStorage.setItem('position',data[index].position);
+          localStorage.setItem('id',data[index].id);
+      }else if(password === ""){
+        $('.message').show();
+        $('.message').text('Please Enter a Password');
+      }
+      else{
+        $('.message').show();
+        $('.message').text('Password is incorect');
+      }
+    }else if(userName === ''){
+      $('.message').show();
+        $('.message').text('Please enter a username');
+    }
+    else{
+      $('.message').show();
+      $('.message').text('There is no such user as '+ userName);
+    }
+   }});
+})
+
+
+
+</script>
+
+</body>
+</html>
