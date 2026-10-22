@@ -1,5 +1,5 @@
+// MedSystem — Author: Kondwani Phiri | SIN: 21163650
 require("dotenv").config();
-var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -13,6 +13,9 @@ var { attachUserToViews } = require("./middleware/auth");
 var { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
 
 var app = express();
+app.disable("x-powered-by");
+if (process.env.TRUST_PROXY === "1") app.set("trust proxy", 1);
+if (process.env.NODE_ENV === "production" && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32)) throw new Error("Set SESSION_SECRET to at least 32 characters");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -22,22 +25,25 @@ app.set("view engine", "ejs");
 app.use(
   session({
     secret:
-      process.env.SESSION_SECRET || "your-secret-key-change-in-production",
+      process.env.SESSION_SECRET || require("crypto").randomBytes(32).toString("hex"),
     resave: false,
     saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === "production", // HTTPS only in production
       httpOnly: true,
+      sameSite: "lax",
       maxAge: parseInt(process.env.SESSION_MAX_AGE) || 3600000, // 1 hour default
     },
   })
 );
 
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: "32kb" }));
+app.use(express.urlencoded({ extended: false, limit: "32kb" }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(require("./middleware/security"));
 
 // Attach user info to all views
 app.use(attachUserToViews);

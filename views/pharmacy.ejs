@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="author" content="Kondwani Phiri">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<%= csrfToken %>">
+  <title>Pharmacy inventory | MedSystem</title>
+  <link rel="stylesheet" href="/stylesheets/improvements.css">
+  <link rel="stylesheet" href="/stylesheets/pharmacy.css">
+  <script src="/javascripts/jquery-3.6.0.min.js"></script>
+  <script src="/javascripts/common.js"></script>
+</head>
+<body>
+<header class="page-toolbar"><a href="/home">Dashboard</a><span>MedSystem / Pharmacy</span><span><%= user.username %> · <%= user.position %></span></header>
+<main>
+  <div class="heading"><div><p class="eyebrow">MEDICINE &amp; SUPPLIES</p><h1>Pharmacy inventory</h1><p>Check availability, replenish supplies and issue stock.</p></div><button id="refresh" type="button">Refresh inventory</button></div>
+  <div class="summary"><article>Medicine lines<strong id="total">—</strong></article><article>Units in stock<strong id="units">—</strong></article><article>Low stock<strong id="low">—</strong></article><article>Out of stock<strong id="out">—</strong></article></div>
+  <p id="pharmacy-status" role="status" aria-live="polite">Loading inventory…</p>
+  <div class="workspace">
+    <section class="inventory" aria-labelledby="inventory-title">
+      <h2 id="inventory-title">Available medicines</h2>
+      <div class="filters"><input id="medicine-search" type="search" placeholder="Search medicine or strength" aria-label="Search medicine or strength"><select id="stock-filter" aria-label="Filter stock"><option value="all">All stock</option><option value="low">Low stock</option><option value="out">Out of stock</option><option value="expired">Expired</option></select></div>
+      <div class="table-scroll"><table><thead><tr><th>Medicine</th><th>Available</th><th>Minimum</th><th>Expiry</th><th>Status</th><th>Stock action</th></tr></thead><tbody id="medicine-rows"></tbody></table></div>
+      <p class="hint">Issue reduces the available quantity. Expired stock cannot be issued.</p>
+    </section>
+    <aside><h2>Add medicine</h2><p class="hint">Use Restock for an existing medicine and strength.</p>
+      <form id="medicine-form">
+        <label for="medicine-name">Medicine name</label><input id="medicine-name" name="name" minlength="2" maxlength="100" required placeholder="e.g. Paracetamol">
+        <label for="medicine-strength">Strength / pack size</label><input id="medicine-strength" name="strength" maxlength="50" required placeholder="e.g. 500 mg">
+        <label for="medicine-unit">Unit</label><select id="medicine-unit" name="unit"><% ['Tablets','Capsules','Bottles','Vials','Tubes','Packets'].forEach(function(unit) { %><option><%= unit %></option><% }); %></select>
+        <label for="medicine-quantity">Opening quantity</label><input id="medicine-quantity" name="quantity" type="number" min="0" max="1000000" step="1" value="0" required>
+        <label for="medicine-minimum">Low-stock threshold</label><input id="medicine-minimum" name="minimumStock" type="number" min="0" max="1000000" step="1" value="10" required>
+        <label for="medicine-expiry">Expiry date (optional)</label><input id="medicine-expiry" name="expiryDate" type="date">
+        <button type="submit">Add medicine</button>
+      </form>
+    </aside>
+  </div>
+</main>
+<script src="/javascripts/pharmacy.js"></script>
+</body></html>

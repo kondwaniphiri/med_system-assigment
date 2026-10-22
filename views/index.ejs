@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="author" content="Kondwani Phiri">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital Management System</title>
     <link rel="stylesheet" href="stylesheets/style.css">
     <script src="javascripts/jquery-3.6.0.min.js"></script>
+    <script src="/javascripts/common.js"></script>
+<link rel="stylesheet" href="/stylesheets/improvements.css">
 </head>
 <body>
   <h1 class="welcome">
@@ -48,51 +52,12 @@ $('.password, .userName').keydown(function(){
 })
 
 
-$('form').submit(function(){
-  event.preventDefault();
-  let userName = $('.userName').val().toLowerCase();
-  let password = $('.password').val();
-
-   $.ajax({
-     url:"http://localhost:3000/database/action",
-     method:"POST",
-     data:{action:'login'},
-     dataType:'JSON',
-     success:function(data){
-         data = data.data;
-         let users = [];
-         for(let i=0; i<data.length;i++){
-          users.push(data[i].username.toLowerCase());
-      }
-      if(users.includes(userName)){
-        let index = users.indexOf(userName.toLowerCase());
-        if(userName===data[index].username.toLowerCase() && password === data[index].password){
-          location.href = '/home';
-          localStorage.setItem('username',data[index].username);
-          localStorage.setItem('position',data[index].position);
-          localStorage.setItem('id',data[index].id);
-      }else if(password === ""){
-        $('.message').show();
-        $('.message').text('Please Enter a Password');
-      }
-      else{
-        $('.message').show();
-        $('.message').text('Password is incorect');
-      }
-    }else if(userName === ''){
-      $('.message').show();
-        $('.message').text('Please enter a username');
-    }
-    else{
-      $('.message').show();
-      $('.message').text('There is no such user as '+ userName);
-    }
-   }});
-})
-
-
-
-</script>
-
-</body>
-</html>
+$('form').submit(function(event){
+ event.preventDefault();
+ $('.submit').prop('disabled',true);
+ $.ajax({url:'/database/action',method:'POST',dataType:'json',
+ data:{action:'login',username:$('.userName').val(),password:$('.password').val()},
+ success:function(){location.href='/home';},
+ complete:function(){$('.submit').prop('disabled',false);}});
+});
+</script></body></html>

@@ -66,55 +66,35 @@ const handleDatabaseError = (
 
 // ==================== AUTHENTICATION ====================
 
-router.post("/login", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-      return sendResponse(
-        res,
-        false,
-        null,
-        "Username and password are required",
-        400
-      );
-    }
-
-    const query = "SELECT * FROM login WHERE username = ? AND password = ?";
-
-    database.query(query, [username, password], (error, results) => {
-      if (error) {
-        return handleDatabaseError(res, error, "Login failed");
-      }
-
-      if (results.length > 0) {
-        // Set session data
-        req.session.userId = results[0].id;
-        req.session.username = results[0].username;
-
-        sendResponse(
-          res,
-          true,
-          { username: results[0].username },
-          "Login successful"
-        );
-      } else {
-        sendResponse(res, false, null, "Invalid username or password", 401);
-      }
-    });
-  } catch (error) {
-    handleDatabaseError(res, error, "Login error");
-  }
-});
-
-router.post("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return sendResponse(res, false, null, "Logout failed", 500);
-    }
-    sendResponse(res, true, null, "Logged out successfully");
-  });
-});
+const { isAuthenticated } = require('../middleware/auth');
+const { hashPassword, verifyPassword } = require('../utils/passwords');
+const { rateLimit, asyncHandler } = require('../middleware/errorHandler');
+router.post('/login', rateLimit({max:15, key: "login"}), asyncHandler(async (req,res)=>{
+ const {username,password}=req.body;
+ if(typeof username!=='string'||typeof password!=='string'||!username.trim()||username.length>50||!password||password.length>256) return sendResponse(res,false,null,'Valid username and password are required',400);
+ const users=await database.queryPromise('SELECT * FROM login WHERE username = ? LIMIT 1',[username.trim()]);
+ const user=users[0];
+ if(!user || !await verifyPassword(password,user.password)) return sendResponse(res,false,null,'Invalid username or password',401);
+ if(!user.password.startsWith('scrypt$')) await database.queryPromise('UPDATE login SET password = ? WHERE id = ?',[await hashPassword(password),user.id]);
+ await new Promise((resolve,reject)=>req.session.regenerate(err=>err?reject(err):resolve()));
+ req.session.userId=user.id;req.session.username=user.username;
+ req.session.position=user.username.toLowerCase()==='admin'?'admin':user.role==='Doctor'?'Doctor':'Staff';
+ await new Promise((resolve,reject)=>req.session.save(err=>err?reject(err):resolve()));
+ sendResponse(res,true,{id:user.id,username:user.username,position:req.session.position},'Login successful');
+}));
+router.use(isAuthenticated);
+router.post('/logout',(req,res)=>req.session.destroy(err=>{
+ if(err) return sendResponse(res,false,null,'Logout failed',500);
+ res.clearCookie('connect.sid');sendResponse(res,true,null,'Logged out successfully');
+}));
+router.post('/add-user',asyncHandler(async(req,res)=>{
+ if(req.session.position!=='admin') return sendResponse(res,false,null,'Administrator access required',403);
+ const {username,password}=req.body;
+ if(typeof username!=='string'||! /^[a-zA-Z0-9_.-]{3,50}$/.test(username)||typeof password!=='string'||password.length<12||password.length>256) return sendResponse(res,false,null,'Use a 3–50 character username and a password of 12–256 characters',400);
+ const role=req.body.role || 'Staff';
+ if(!['Staff','Doctor'].includes(role)) return sendResponse(res,false,null,'Choose Staff or Doctor',400);
+ try {await database.queryPromise('INSERT INTO login (username,password,role) VALUES (?,?,?)',[username,await hashPassword(password),role]);sendResponse(res,true,null,'User added successfully',201);}catch(err){handleDatabaseError(res,err);}
+}));
 
 // ==================== FETCH OPERATIONS ====================
 
@@ -144,7 +124,7 @@ router.post("/fetch-staff", (req, res) => {
 
 // Fetch all wards
 router.post("/fetch-wards", (req, res) => {
-  const query = "SELECT * FROM ward ORDER BY wardId";
+  const query = "SELECT w.*, (SELECT COUNT(*) FROM patientward pw WHERE pw.wardId=w.wardId) AS currentOccupancy FROM ward w ORDER BY w.wardId";
 
   database.query(query, (error, data) => {
     if (error) {
@@ -260,6 +240,9 @@ router.post("/add-staff", validateStaff, (req, res) => {
 router.post("/add-doctor-patient", validateDoctorPatient, (req, res) => {
   const { doctorId, patientId } = req.body;
 
+  database.query('SELECT staffId FROM staff WHERE staffId = ? AND position = ?', [doctorId, 'Doctor'], (error, rows) => {
+    if (error) return handleDatabaseError(res, error);
+    if (!rows.length) return sendResponse(res, false, null, 'Select a valid doctor', 400);
   const query = `INSERT INTO doctorpatient (doctorId, patientId) VALUES (?, ?)`;
 
   database.query(query, [doctorId, patientId], (error, result) => {
@@ -278,12 +261,16 @@ router.post("/add-doctor-patient", validateDoctorPatient, (req, res) => {
       201
     );
   });
+  });
 });
 
 // Add nurse-ward relationship
 router.post("/add-nurse-ward", validateNurseWard, (req, res) => {
   const { nurseId, wardId } = req.body;
 
+  database.query('SELECT staffId FROM staff WHERE staffId = ? AND position = ?', [nurseId, 'Nurse'], (error, rows) => {
+    if (error) return handleDatabaseError(res, error);
+    if (!rows.length) return sendResponse(res, false, null, 'Select a valid nurse', 400);
   const query = `INSERT INTO nurseward (nurseId, wardId) VALUES (?, ?)`;
 
   database.query(query, [nurseId, wardId], (error, result) => {
@@ -298,31 +285,19 @@ router.post("/add-nurse-ward", validateNurseWard, (req, res) => {
       201
     );
   });
+  });
 });
 
 // Add patient-ward relationship
-router.post("/add-patient-ward", validatePatientWard, (req, res) => {
-  const { patientId, wardId } = req.body;
-
-  const query = `INSERT INTO patientward (patientId, wardId) VALUES (?, ?)`;
-
-  database.query(query, [patientId, wardId], (error, result) => {
-    if (error) {
-      return handleDatabaseError(
-        res,
-        error,
-        "Failed to assign patient to ward"
-      );
-    }
-    sendResponse(
-      res,
-      true,
-      { id: result.insertId },
-      "Patient-ward relationship created successfully",
-      201
-    );
-  });
-});
+router.post('/add-patient-ward', validatePatientWard, asyncHandler(async(req,res)=>{
+ try {
+  const result=await require('../utils/wardAssignments')(database,req.body.patientId,req.body.wardId);
+  sendResponse(res,true,{id:result.insertId},'Patient-ward relationship created successfully',201);
+ } catch(error) {
+  if(error.status) return sendResponse(res,false,null,error.message,error.status);
+  handleDatabaseError(res,error,'Failed to assign patient to ward');
+ }
+}));
 
 // ==================== UPDATE OPERATIONS ====================
 
@@ -428,19 +403,19 @@ router.post("/delete-staff", validateId, (req, res) => {
 
 // Get patient appointment details
 router.post("/appointments-patient", (req, res) => {
-  const query = `SELECT DISTINCT p.patientId, p.firstName, p.surname, w.wardName, 
-                   s.position, s.firstName AS staffName, s.staffId
-                   FROM patient AS p
-                   JOIN staff AS s
-                   JOIN doctorpatient AS dp
-                   JOIN ward AS w
-                   JOIN patientward AS pw
-                   JOIN nurseward AS nw
-                   ON p.patientId = pw.patientId 
-                   AND p.patientId = dp.patientId 
-                   AND pw.wardId = w.wardId 
-                   AND (dp.doctorId = s.staffId OR nw.nurseId = s.staffId)
-                   ORDER BY p.patientId`;
+  const query = `SELECT p.patientId, p.firstName, p.surname, w.wardName,
+ s.position, s.firstName AS staffName, s.staffId
+ FROM patient p JOIN doctorpatient dp ON dp.patientId=p.patientId
+ JOIN staff s ON s.staffId=dp.doctorId
+ LEFT JOIN patientward pw ON pw.patientId=p.patientId
+ LEFT JOIN ward w ON w.wardId=pw.wardId
+ UNION
+ SELECT p.patientId, p.firstName, p.surname, w.wardName,
+ s.position, s.firstName AS staffName, s.staffId
+ FROM patient p JOIN patientward pw ON pw.patientId=p.patientId
+ JOIN ward w ON w.wardId=pw.wardId
+ JOIN nurseward nw ON nw.wardId=w.wardId
+ JOIN staff s ON s.staffId=nw.nurseId ORDER BY patientId`;
 
   database.query(query, (error, data) => {
     if (error) {
@@ -499,5 +474,8 @@ router.post("/appointments-nurse", (req, res) => {
     sendResponse(res, true, data);
   });
 });
+
+router.use(require('./improvements'));
+router.use(require('./pharmacy'));
 
 module.exports = router;

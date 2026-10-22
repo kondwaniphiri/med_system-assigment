@@ -5,13 +5,12 @@ $(document).ready(function(){
     loadData();
     function loadData(){
         $.ajax({
-            url:"http://localhost:3000/database/action",
+            url:"/database/action",
             method:"POST",
             data:{action:'fetche'},
             dataType :"JSON",
             success: function(data){
                 data = data.data;
-                console.log(data);
 
                 document.querySelector("#search").addEventListener("keyup",function(){
                     let value = this.value;
@@ -29,7 +28,7 @@ $(document).ready(function(){
                         value = value.toLowerCase();
                         let name=data[i].firstName.toLowerCase();
                         let id=data[i].staffId.toString().toLowerCase();
-                        let SSN = data[i].SSN.toString().toLowerCase();
+                        let SSN = String(data[i].SSN || "").toLowerCase();
         
                         if(document.querySelector("#id").checked){
                             if(id.includes(value)){
@@ -62,18 +61,18 @@ $(document).ready(function(){
                     let province = data[i].province;
                     let SSN = data[i].SSN;
                     html += `<tr>
-                        <td>${staffId}</td>
-                        <td>${firstName}</td>
-                        <td>${surname}</td>
-                        <td>${position}</td>
-                        <td>${street}</td>
-                        <td>${town}</td>
-                        <td>${province}</td>
-                        <td>${SSN}</td>
+                        <td>${escapeHtml(staffId)}</td>
+                        <td>${escapeHtml(firstName)}</td>
+                        <td>${escapeHtml(surname)}</td>
+                        <td>${escapeHtml(position)}</td>
+                        <td>${escapeHtml(street)}</td>
+                        <td>${escapeHtml(town)}</td>
+                        <td>${escapeHtml(province)}</td>
+                        <td>${escapeHtml(SSN)}</td>
                         </tr>`;
                 }
         
-                document.querySelector("#viewe").innerHTML= html;
+                document.querySelector("#viewe").innerHTML = html;
                 details();
                 staffDetails();
             }
@@ -87,14 +86,14 @@ for(let i=0;i<table.rows.length; i++){
 
     table.rows[i].onclick = function(){
     rIndex =this.rowIndex;
-    document.querySelector(".lId").innerHTML = this.cells[0].innerHTML;
-    document.querySelector(".lFirstName").innerHTML = this.cells[1].innerHTML;
-    document.querySelector(".lSurname").innerHTML = this.cells[2].innerHTML;
-    document.querySelector(".lPosition").innerHTML = this.cells[3].innerHTML;
-    document.querySelector(".lStreet").innerHTML = this.cells[4].innerHTML;
-    document.querySelector(".lTown").innerHTML = this.cells[5].innerHTML;
-    document.querySelector(".lProvince").innerHTML = this.cells[6].innerHTML;
-    document.querySelector(".lSSN").innerHTML = this.cells[7].innerHTML;
+    document.querySelector(".lId").textContent = this.cells[0].textContent;
+    document.querySelector(".lFirstName").textContent = this.cells[1].textContent;
+    document.querySelector(".lSurname").textContent = this.cells[2].textContent;
+    document.querySelector(".lPosition").textContent = this.cells[3].textContent;
+    document.querySelector(".lStreet").textContent = this.cells[4].textContent;
+    document.querySelector(".lTown").textContent = this.cells[5].textContent;
+    document.querySelector(".lProvince").textContent = this.cells[6].textContent;
+    document.querySelector(".lSSN").textContent = this.cells[7].textContent;
 }   
 }
 }

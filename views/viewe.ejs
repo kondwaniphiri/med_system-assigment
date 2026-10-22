@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="author" content="Kondwani Phiri">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Employee</title>
     <link rel="stylesheet" href="stylesheets/viewe.css">
     <script src="javascripts/jquery-3.6.0.min.js"></script>
+    <script src="/javascripts/common.js"></script>
+<link rel="stylesheet" href="/stylesheets/improvements.css">
 </head>
 <body>
+<header class="page-toolbar"><a href="/home">Dashboard</a><span>Employee records</span><a href="/appointments">Assignments</a></header>
 
 
 
@@ -35,7 +40,7 @@
         <th>Street</th>
         <th>Town</th>
         <th>Province</th>
-        <th>SSN</th>
+        <th>NRC</th>
     </tr>
 </thead>
     <tbody id="viewe">
@@ -54,7 +59,7 @@
     <h3>Street</h3> <span class="lStreet">-</span>
     <h3>Town</h3> <span class="lTown">-</span>
     <h3>Province</h3> <span class="lProvince">-</span>
-    <h3>SSN</h3> <span class="lSSN">-</span>
+    <h3>NRC</h3> <span class="lSSN">-</span>
     
 </div>
 </div>

@@ -1,5 +1,7 @@
 require("dotenv").config();
-const mysql = require("mysql");
+const mysql = require("mysql2");
+const { hashPassword } = require("../utils/passwords");
+const { randomBytes } = require("crypto");
 
 // Create connection without database selection
 const connection = mysql.createConnection({
@@ -10,6 +12,9 @@ const connection = mysql.createConnection({
 });
 
 const dbName = process.env.DB_NAME || "hospital";
+if (!/^[a-zA-Z0-9_]+$/.test(dbName)) throw new Error("DB_NAME must contain only letters, digits, or underscores");
+const adminPassword = process.env.ADMIN_PASSWORD || randomBytes(18).toString("base64url");
+if (adminPassword.length < 12) throw new Error("ADMIN_PASSWORD must be at least 12 characters");
 
 // SQL script to create database and tables
 const initSQL = `
@@ -22,6 +27,7 @@ CREATE TABLE IF NOT EXISTS login (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'Staff',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -96,9 +102,9 @@ CREATE TABLE IF NOT EXISTS patientward (
     UNIQUE KEY unique_assignment (patientId, wardId)
 );
 
--- Insert default admin user (password: admin123 - CHANGE THIS!)
+-- Insert initial administrator with a hashed password
 INSERT IGNORE INTO login (username, password) 
-VALUES ('admin', 'admin123');
+VALUES ('admin', ?);
 
 -- Insert sample wards
 INSERT IGNORE INTO ward (wardName, capacity) VALUES
@@ -110,14 +116,14 @@ INSERT IGNORE INTO ward (wardName, capacity) VALUES
 
 -- Insert sample staff
 INSERT IGNORE INTO staff (firstName, surname, position, SSN, street, town, province) VALUES
-('John', 'Smith', 'Doctor', '123-45-6789', '123 Main St', 'Springfield', 'IL'),
-('Sarah', 'Johnson', 'Nurse', '234-56-7890', '456 Oak Ave', 'Springfield', 'IL'),
-('Michael', 'Brown', 'Doctor', '345-67-8901', '789 Elm St', 'Springfield', 'IL'),
-('Emily', 'Davis', 'Nurse', '456-78-9012', '321 Pine Rd', 'Springfield', 'IL');
+('Chanda', 'Bwalya', 'Doctor', '420653/63/8', 'Plot 18, Kabulonga Road', 'Lusaka', 'Lusaka'),
+('Thandiwe', 'Banda', 'Nurse', '362564/66/7', 'Plot 25, Chilenje South', 'Lusaka', 'Lusaka'),
+('Mutinta', 'Phiri', 'Doctor', '836400/29/9', 'Plot 42, Independence Avenue', 'Ndola', 'Copperbelt'),
+('Mwewa', 'Chileshe', 'Nurse', '801648/28/9', 'Plot 16, Riverside', 'Kitwe', 'Copperbelt');
 `;
 
 // Execute the initialization
-connection.connect((err) => {
+connection.connect(async (err) => {
   if (err) {
     console.error("Error connecting to MySQL:", err.message);
     process.exit(1);
@@ -126,7 +132,8 @@ connection.connect((err) => {
   console.log("Connected to MySQL server");
   console.log(`Initializing database: ${dbName}`);
 
-  connection.query(initSQL, (error, results) => {
+  const passwordHash = await hashPassword(adminPassword);
+  connection.query(initSQL, [passwordHash], (error, results) => {
     if (error) {
       console.error("Error initializing database:", error.message);
       connection.end();
@@ -138,7 +145,7 @@ connection.connect((err) => {
     console.log("✓ Sample data inserted");
     console.log("\nDefault credentials:");
     console.log("  Username: admin");
-    console.log("  Password: admin123");
+    console.log("  Initial admin password (only applies to newly created admin):", adminPassword);
     console.log(
       "\n⚠️  IMPORTANT: Change the default password after first login!\n"
     );

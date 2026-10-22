@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="author" content="Kondwani Phiri">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <link rel="stylesheet" href="stylesheets/home.css">
     <script src="javascripts/jquery-3.6.0.min.js"></script>
+    <script src="/javascripts/common.js"></script>
+<link rel="stylesheet" href="/stylesheets/improvements.css">
 </head>
 <body>
     <nav>
@@ -14,36 +18,55 @@
         <img src="images/img.png" alt="">
     </nav>
 <div class="line">
-    <span>Logged in as: </span><span class="user">-</span><br>
-    <span>ID: </span> <span class="id">-</span> <br>
-    <span>Position: </span> <span class="pos">-</span> <br><br>
+    <span>Logged in as: </span><span class="user"><%= user.username %></span><br>
+    <span>ID: </span> <span class="id"><%= user.id %></span> <br>
+    <span>Position: </span> <span class="pos"><%= user.position %></span> <br><br>
 
     <button class="showAddUser">Add User</button><br>
-    <a href="/"><button class="logout">Logout</button></a>
+    <button class="logout">Logout</button>
 </div>
 
 <div class="wrapper">
 <form action="" class="addUser">
     <span class="close">x</span>
     <h1>User Name</h1>
-    <input type="text" class="usernameField">
-    <h1>Position</h1>
-    <input type="text" list="positions" class="positionsField">
-    <datalist id="positions">
-        <option value="admin"></option>
-        <option value="Human Resource"></option>
-        <option value="Doctor"></option>
-        <option value="Supervisor"></option>
-    </datalist>
+    <input type="text" class="usernameField" aria-label="Username" autocomplete="off" pattern="[a-zA-Z0-9_.-]{3,50}" required>
+    <label for="account-role">Access</label><select id="account-role" class="roleField"><option value="Staff">Staff</option><option value="Doctor">Doctor</option></select>
     <h1>Password</h1>
-    <input type="password" class="p1">
+    <input type="password" class="p1" aria-label="New user password" autocomplete="new-password" minlength="12" maxlength="256" required>
     <h1>Re-enter Password</h1>
-    <input type="password" class="p2">
+    <input type="password" class="p2" aria-label="Confirm new user password" autocomplete="new-password" minlength="12" maxlength="256" required>
     <span class="message">-</span>
     <input type="submit" name="" class="addSubmit">
 </form>
 </div>
+
+<section class="overview" aria-labelledby="overview-title">
+ <div class="overview-header"><h2 id="overview-title">Hospital overview</h2><button id="refresh-dashboard" type="button">Refresh</button></div>
+ <p id="dashboard-status" role="status" aria-live="polite"></p>
+ <div class="overview-cards">
+  <article>Patients<strong data-total="patients">?</strong></article>
+  <article>Staff<strong data-total="staff">?</strong></article>
+  <article>Doctors<strong data-total="doctors">?</strong></article>
+  <article>Nurses<strong data-total="nurses">?</strong></article>
+  <article>Patients without a ward<strong data-total="unassignedPatients">?</strong></article>
+ </div>
+ <h3>Ward availability</h3>
+ <div class="table-scroll"><table><thead><tr><th>Ward</th><th>Occupied</th><th>Capacity</th><th>Available beds</th><th>Status</th></tr></thead><tbody id="ward-summary"></tbody></table></div>
+</section>
+<details class="account-settings">
+ <summary>Change your password</summary>
+ <form id="password-form">
+  <label for="current-password">Current password</label><input id="current-password" type="password" autocomplete="current-password" maxlength="256" required>
+  <label for="new-password">New password (at least 12 characters)</label><input id="new-password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required>
+  <label for="confirm-password">Confirm new password</label><input id="confirm-password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required>
+  <p id="password-status" role="status" aria-live="polite"></p><button type="submit">Change password</button>
+ </form>
+</details>
     <div class="menu">
+        <% if (['Doctor','admin'].includes(user.position)) { %>
+        <div class="item"><a href="/pharmacy"><img src="/images/pharmacy.svg" alt=""><h1>Pharmacy Inventory</h1></a></div>
+        <% } %>
         <div class="item 1">
             <a href="/viewp">
             <img src="images/viewp.svg" alt="">
@@ -104,14 +127,11 @@ $('.showAddUser').click(function(){
     $('.wrapper').show(200);
 });
 $('.logout').click(function(){
-    localStorage.clear();
+    $.post('/database/action',{action:'logout'}).done(function(){localStorage.clear();location.href='/';});
 })
 $('.close').click(function(){
     $('.wrapper').hide(200);
 });
-$('.user').text(localStorage.getItem('username'));
-$('.id').text(localStorage.getItem('id'));
-$('.pos').text(localStorage.getItem('position'));
 
 
 if(!(($('.pos').text()=='admin')||($('.pos').text()=='Human Resource')||($('.pos').text()=='Supervisor'))){
@@ -124,21 +144,11 @@ if(!(($('.pos').text()=='admin')||($('.pos').text()=='Human Resource')||($('.pos
 $(document).ready(function(){
     $('.addUser').submit(function(e){
     e.preventDefault();
-    if(!($('.usernameField').val() == '') && !($('positionsField').val()=='')){
-        if($('.p1').val()==$('.p2').val()){
-            $('.message').text('');
-            alert('User added successfully');
-            $('.wrapper').hide();
-        }else {
-            $('.message').text('The Passwords do not match');
-        }
-    } else {
-        $('.message').text('Make Sure all fields are filled');
-    }
-
-})
-})
-
+    if($('.p1').val() !== $('.p2').val()) { $('.message').text('The passwords do not match'); return; }
+    $.post('/database/action',{action:'add-user',username:$('.usernameField').val(),password:$('.p1').val(),role:$('.roleField').val()})
+    .done(function(data){alert(data.message);$('.addUser')[0].reset();$('.wrapper').hide();});
+});
+});
 </script>
-
+<script src="/javascripts/dashboard.js"></script>
 </html>

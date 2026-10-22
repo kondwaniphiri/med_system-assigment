@@ -1,51 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="author" content="Kondwani Phiri">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Employee</title>
     <link rel="stylesheet" href="stylesheets/adde.css">
     <script src="javascripts/jquery-3.6.0.min.js"></script>
+    <script src="/javascripts/common.js"></script>
+<link rel="stylesheet" href="/stylesheets/improvements.css">
 </head>
 <body>
+<header class="page-toolbar"><a href="/home">Dashboard</a><span>Add or edit employee</span><a href="/appointments">Assignments</a></header>
 
     <div id="addEmployeeTable" >
         <div class="input">
         <h2>Add Employee</h1>
         <h1 id="h1Id">ID</h1>
-        <input type="text" required name="" id="searchId" onkeydown="focusNext(event,'firstName','searchId')">
+        <input aria-label="search Id" maxlength="10" type="text" name="" id="searchId" onkeydown="focusNext(event,'firstName','searchId')">
         <h1>First Name</h1>
-        <input type="text" name="" required id="firstName"  onkeydown="focusNext(event,'surname','searchId')">
+        <input aria-label="first Name" maxlength="50" type="text" name="" required id="firstName"  onkeydown="focusNext(event,'surname','searchId')">
         <h1>Surname</h1>
-        <input type="text" name="" required id="surname"  onkeydown="focusNext(event,'position','firstName')">
+        <input aria-label="surname" maxlength="50" type="text" name="" required id="surname"  onkeydown="focusNext(event,'position','firstName')">
         <h1>Position</h1>
-        <input list="positionList" type="text" name="" required id="position" onkeydown="focusNext(event,'street','surname')">
+        <input aria-label="position" maxlength="50" list="positionList" type="text" name="" required id="position" onkeydown="focusNext(event,'street','surname')">
         <datalist id="positionList">
             <option value="Administrator"></option>
-            <option value="Human Resourse Manager"></option>
+            <option value="Technician"></option>
+            <option value="Receptionist"></option>
             <option value="Doctor"></option>
             <option value="Nurse"></option>
 
         </datalist>
         <h1>Street</h1>
-        <input type="text" name="" required id="street" onkeydown="focusNext(event,'town','position')">
+        <input aria-label="street" maxlength="100" type="text" name="" id="street" onkeydown="focusNext(event,'town','position')">
         <h1>Town</h1>
-        <input type="text" name="" required id="town" onkeydown="focusNext(event,'province','street')">
+        <input aria-label="town" maxlength="50" type="text" name="" id="town" onkeydown="focusNext(event,'province','street')">
         <h1>Province</h1>
-        <input type="text" name="" required id="province" onkeydown="focusNext(event,'SSN','town')">
-        <h1>Social Security Number</h1>
-        <input type="text" name="" required id="SSN" onkeydown="focusNext(event,'SSN','province')">
+        <input aria-label="province" maxlength="50" type="text" name="" id="province" onkeydown="focusNext(event,'SSN','town')">
+        <h1>NRC / Staff Reference</h1>
+        <input aria-label=" S S N" maxlength="20" type="text" name="" id="SSN" onkeydown="focusNext(event,'SSN','province')">
         </div>
 <div class="buttons">
     <button onclick="addEmployee()" id="addSubmit">Add</button>
-    <div><input type="checkbox" id="enable"><label for="enable">Enable Update & Delete</span></div>
+    <div><input type="checkbox" id="enable"><label for="enable">Enable Update & Delete</label></div>
     <button onclick="updateStaff()">Update</button>
        <button onclick="deleteStaff()">Delete</button>
     <button class="clear">Clear</button>
 </div>
 <div>
 
-    <script src="javascripts/adde.js"></script>
+    <script src="/javascripts/record-form.js"></script>
+<script src="javascripts/adde.js"></script>
 </body>
 </html>

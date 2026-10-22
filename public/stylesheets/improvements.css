@@ -1,0 +1,58 @@
+:focus-visible { outline: 3px solid #196ac0; outline-offset: 3px; }
+button:disabled, input[type=submit]:disabled { opacity: .55; cursor: wait; }
+.page-toolbar { display: flex; flex: 0 0 100%; width: 100%; box-sizing: border-box; justify-content: space-between; align-items: center; padding: 14px 3%; background: #102b49; color: white; font: 16px sans-serif; }
+.page-toolbar a { color: white; text-decoration: underline; }
+.overview, .account-settings { margin: 28px 3%; font: 16px/1.5 sans-serif; color: #102b49; }
+.overview-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.overview button, .account-settings button { background: #102b49; color: white; border-radius: 6px; padding: 10px 16px; cursor: pointer; }
+.overview-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin: 20px 0; }
+.overview-cards article { padding: 20px; border: 1px solid #ccdae6; border-radius: 10px; background: #f3f8fc; }
+.overview-cards strong { display: block; font-size: 32px; }
+.table-scroll { overflow-x: auto; }
+.overview table { width: 100%; border-collapse: collapse; }
+.overview th, .overview td { text-align: left; padding: 12px; border-bottom: 1px solid #d9e3ec; }
+.account-settings summary { cursor: pointer; font-weight: bold; }
+.account-settings #password-form { position: static; width: min(100%, 460px); margin: 16px 0; padding: 20px; box-sizing: border-box; align-items: stretch; border: 1px solid #ccdae6; box-shadow: none; }
+.account-settings #password-form input { width: 100%; box-sizing: border-box; padding: 12px; }
+.pager { display: flex; gap: 12px; align-items: center; justify-content: center; margin: 12px 0; font: 14px sans-serif; }
+.pager button { padding: 8px 14px; cursor: pointer; }
+.assignment-row { padding: 10px 0; border-bottom: 1px solid #d9e3ec; }
+.assignment-row button { margin-left: 12px; padding: 6px 10px; cursor: pointer; }
+.record-status { padding: 8px; font: 14px sans-serif; }
+#assignment-status { width: 100%; }
+.section0 { align-items: center; flex-wrap: wrap; gap: 12px; box-sizing: border-box; }
+.section0 input#search,
+.section0 input#staff-search,
+.filters input#medicine-search {
+  box-sizing: border-box;
+  width: min(480px, 100%);
+  min-width: 0;
+  height: 34px;
+  min-height: 34px;
+  max-height: 34px;
+  flex: 0 1 480px;
+  align-self: center;
+  padding: 5px 12px 5px 38px;
+  border: 1px solid #cbd7e2;
+  border-radius: 6px;
+  background: #fff url('/images/search.svg') no-repeat 11px center;
+  background-size: 18px 18px;
+  font: 14px/22px Arial, sans-serif;
+  color: #152c46;
+}
+.section0 .radio { margin-left: 0; }
+@media (max-width: 700px) {
+  nav h1 { font-size: 26px; }
+  nav { height: 26vh; }
+  .menu { gap: 16px; padding: 0 3%; box-sizing: border-box; }
+  .menu .item, .menu .item:hover { width: calc(50% - 30px); margin: 0; }
+  .item h1 { font-size: 20px; }
+  .wrapper form { width: 90%; margin-left: 5%; }
+  .page-toolbar { gap: 12px; flex-wrap: wrap; }
+  #addPatientTable .input, #addEmployeeTable .input { width: 94%; margin-left: 3%; }
+  #addPatientTable .buttons, #addEmployeeTable .buttons { margin: 16px 3%; width: 94%; }
+  .patientTable, .staffTable, .rightSide { width: 100%; height: auto; }
+  .section1 { overflow-x: auto; width: 100%; }
+  .section0 { flex-wrap: wrap; gap: 12px; box-sizing: border-box; }
+  .rightSide { margin: 20px 3%; }
+}

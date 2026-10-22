@@ -27,10 +27,10 @@ const errorHandler = (err, req, res, next) => {
   const statusCode = err.status || err.statusCode || 500;
 
   // If it's an AJAX request, return JSON
-  if (req.xhr || req.headers.accept.indexOf("json") > -1) {
+  if (req.xhr || (req.headers.accept || "").includes("json") || req.originalUrl.startsWith("/api/") || req.originalUrl.startsWith("/database/")) {
     return res.status(statusCode).json({
       success: false,
-      message: err.message,
+      message: statusCode >= 500 ? "Internal server error" : err.message,
       error:
         process.env.NODE_ENV === "development"
           ? {
@@ -46,7 +46,7 @@ const errorHandler = (err, req, res, next) => {
   res.render("error", {
     title: "Error",
     statusCode,
-    message: err.message,
+    message: statusCode >= 500 ? "Internal server error" : err.message,
   });
 };
 
@@ -71,7 +71,7 @@ const rateLimit = (options = {}) => {
   return (req, res, next) => {
     const ip = req.ip || req.connection.remoteAddress;
     const now = Date.now();
-    const key = `${ip}`;
+    const key = `${options.key || "general"}:${ip}`;
 
     if (!rateLimitStore.has(key)) {
       rateLimitStore.set(key, { count: 1, resetTime: now + windowMs });
@@ -106,7 +106,7 @@ setInterval(() => {
       rateLimitStore.delete(key);
     }
   }
-}, 60000); // Clean up every minute
+}, 60000).unref(); // Clean up every minute
 
 module.exports = {
   notFoundHandler,

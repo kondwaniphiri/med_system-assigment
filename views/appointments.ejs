@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="author" content="Kondwani Phiri">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +10,13 @@
     <link rel="stylesheet" href="stylesheets/managep.css">
     <link rel="stylesheet" href="stylesheets/appointment.css">
     <script src="javascripts/jquery-3.6.0.min.js"></script>
+    <script src="/javascripts/common.js"></script>
+<link rel="stylesheet" href="/stylesheets/improvements.css">
 </head>
 <body>
+<header class="page-toolbar"><a href="/home">Dashboard</a><span>Appointments and assignments</span><a href="/appointments">Assignments</a></header>
 
-<div class="toggled">
+<p id="assignment-status" class="record-status" role="status" aria-live="polite">Loading records?</p><div class="toggled">
     <div><input checked name="toggle" value="staff" type="radio" id="staff"  onclick="patientStaff()">
     <label for="staff"> Staff</label></div>
     <div><input name="toggle" value="patient" type="radio" id="patient" onclick="patientStaff()">
@@ -21,7 +26,7 @@
 <!-- Patietnts table -->
 <section class="patientTable">
     <div class="section0">
-        <input type="text" placeholder="Search" id="search">
+        <input type="search" placeholder="Search patients" aria-label="Search patients" id="search">
         <div class="radio">
             <input checked name="search" value="id" type="radio" id="id">
             <label for="id"> ID</label>
@@ -55,14 +60,14 @@
 <!-- Staff table -->
 <section class="staffTable">
     <div class="section0">
-        <input type="text" placeholder="Search" id="search">
+        <input type="search" placeholder="Search staff" aria-label="Search staff" id="staff-search">
         <div class="radio">
-            <input checked name="search" value="id" type="radio" id="id">
-            <label for="id"> ID</label>
-            <input name="search" value="name" type="radio" id="name">
-            <label for="name"> Name</label>
-            <input name="search" value="SSN" type="radio" id="SSN">
-            <label for="SSN"> SSN</label>
+            <input checked name="staff-search" value="id" type="radio" id="staff-id">
+            <label for="staff-id"> ID</label>
+            <input name="staff-search" value="name" type="radio" id="staff-name">
+            <label for="staff-name"> Name</label>
+            <input name="staff-search" value="SSN" type="radio" id="staff-SSN">
+            <label for="staff-SSN"> SSN</label>
         </div>
     </div>
     <div class="section1">
@@ -76,7 +81,7 @@
             <th>Street</th>
             <th>Town</th>
             <th>Province</th>
-            <th>SSN</th>
+            <th>NRC</th>
         </tr>
     </thead>
         <tbody id="viewe">
@@ -101,10 +106,10 @@
                 <span>Ward: </span><span>-</span>
             </div>
             <div class="doctors">
-                <span>Dr. </span><span>Name, </span><span>Id </span><button>Delete</button>
+                <span>Dr. </span><span>Name, </span><span>Id </span>
             </div>
             <div class="nurses">
-                <span>Nurse. </span><span>Name, </span><span>Id </span><button>Delete</button>
+                <span>Nurse. </span><span>Name, </span><span>Id </span>
             </div>
         </div>
     </div>
@@ -118,7 +123,7 @@
         </div>
         <div class="doctorApps">
             <div class="patients">
-            <span>Name, </span><span>Id </span><button>Delete</button>
+            <span>Name, </span><span>Id </span>
             </div>
         </div>
     </div>
@@ -132,17 +137,17 @@
         </div>
         <div class="nurseApps">
             <div class="nursePatients">
-            <span>Name, </span><span>Id </span><button>Delete</button>
+            <span>Name, </span><span>Id </span>
             </div>
             <div class="wards">
-                <span>Ward, </span><span>Id </span><button>Delete</button>
+                <span>Ward, </span><span>Id </span>
                 </div>
         </div>
     </div>
 </section>
 <!-- Left side -->
 <script src="javascripts/appointments.js"></script>
-<script src="javascripts/viewe.js"></script>
+
 
 
 

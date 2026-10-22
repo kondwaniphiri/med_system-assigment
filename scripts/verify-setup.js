@@ -101,7 +101,7 @@ if (nodeModulesExists) {
     "express-session",
     "express-validator",
     "dotenv",
-    "mysql",
+    "mysql2",
     "ejs",
   ];
 
@@ -156,12 +156,7 @@ requiredFiles.forEach((file) => {
 });
 
 // 8. Check documentation files
-const docFiles = [
-  "README.md",
-  "API_DOCUMENTATION.md",
-  "CHANGELOG.md",
-  "QUICK_REFERENCE.md",
-];
+const docFiles = ["README.md"];
 
 docFiles.forEach((file) => {
   const filePath = path.join(__dirname, "..", file);
@@ -182,7 +177,7 @@ if (
   console.log("\n--- Testing Database Connection ---");
 
   try {
-    const mysql = require("mysql");
+    const mysql = require("mysql2");
     const connection = mysql.createConnection({
       host: process.env.DB_HOST || "localhost",
       user: process.env.DB_USER || "root",
@@ -201,7 +196,7 @@ if (
 
         // Check if database exists
         const dbName = process.env.DB_NAME || "hospital";
-        connection.query(`SHOW DATABASES LIKE '${dbName}'`, (err, results) => {
+        connection.query("SHOW DATABASES LIKE ?", [dbName], (err, results) => {
           if (err) {
             console.log("❌ Database Query");
             console.log(`   ${err.message}`);
@@ -244,7 +239,7 @@ function printSummary() {
     console.log("1. If database doesn't exist: npm run init-db");
     console.log("2. Start the application: npm run dev");
     console.log("3. Visit: http://localhost:3000");
-    console.log("4. Login with: admin / admin123");
+    console.log("4. Login with admin and the password from database initialization");
   } else if (errors === 0) {
     console.log("\n⚠️  Setup is mostly complete, but there are warnings.");
     console.log("Review the warnings above and fix them if needed.");

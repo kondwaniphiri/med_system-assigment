@@ -1,3 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Kondwani Phiri">
+  <title>MedSystem | Error</title>
+  <link rel="stylesheet" href="/stylesheets/improvements.css">
+</head>
+<body>
 <h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<h2><%= error.status || '' %></h2>
+<pre><%= error.stack || '' %></pre>
+<a href="/home">Return to dashboard</a>
+</body>
+</html>

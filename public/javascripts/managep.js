@@ -14,7 +14,7 @@ $(document).ready(function(){
     loadData();
     function loadData(){
         $.ajax({
-            url:"http://localhost:3000/database/action",
+            url:"/database/action",
             method:"POST",
             data:{action:'fetchp'},
             dataType :"JSON",
@@ -36,7 +36,7 @@ $(document).ready(function(){
                         value = value.toLowerCase();
                         let name=data[i].firstName.toLowerCase();
                         let id=data[i].patientId.toString().toLowerCase();
-                        let insurance = data[i].insuranceName.toLowerCase();
+                        let insurance = String(data[i].insuranceName || "").toLowerCase();
         
                         if(document.querySelector("#id").checked == true){
                             if(id.toString().includes(value)){
@@ -57,7 +57,6 @@ $(document).ready(function(){
                 }
         
                 function buildTable(data){
-                    console.log(data);
                 let html = ``;
         
                 for(let i = 0; i<data.length; i++){
@@ -68,15 +67,15 @@ $(document).ready(function(){
                     let phone = data[i].phone;
                     let street = data[i].street;
                     html += `<tr>
-                        <td>${patientId}</td>
-                         <td>${firstName}</td>
-                        <td>${surname}</td>
-                        <td>${insuranceName}</td>
-                        <td>${phone}</td>
-                        <td>${street}</td>
+                        <td>${escapeHtml(patientId)}</td>
+                         <td>${escapeHtml(firstName)}</td>
+                        <td>${escapeHtml(surname)}</td>
+                        <td>${escapeHtml(insuranceName)}</td>
+                        <td>${escapeHtml(phone)}</td>
+                        <td>${escapeHtml(street)}</td>
                         </tr>`;
                 }        
-                document.querySelector("#viewp").innerHTML= html;
+                document.querySelector("#viewp").innerHTML = html;
                 details();
             }
             }
@@ -89,9 +88,9 @@ function details(){
     for(let i=0;i<table.rows.length; i++){
         table.rows[i].onclick = function(){
         rIndex =this.rowIndex;
-        document.querySelector(".lId").innerHTML = this.cells[0].innerHTML
-        document.querySelector(".lFirstName").innerHTML = this.cells[1].innerHTML
-        document.querySelector(".lSurname").innerHTML = this.cells[2].innerHTML
+        document.querySelector(".lId").textContent = this.cells[0].textContent
+        document.querySelector(".lFirstName").textContent = this.cells[1].textContent
+        document.querySelector(".lSurname").textContent = this.cells[2].textContent
     }   
     }
 }
@@ -101,7 +100,7 @@ $(document).ready(function(){
     loadData();
     function loadData(){
         $.ajax({
-            url:"http://localhost:3000/database/action",
+            url:"/database/action",
             method:"POST",
             data:{action:'fetchw'},
             dataType :"JSON",
@@ -112,13 +111,15 @@ $(document).ready(function(){
                 let wardName;
                 for(let i=0; i<data.length;i++){
                     wardName = data[i].wardName;
-                    ward +=`<option value="${wardName}">${wardName}</option>`
+                    ward +=`<option value="${escapeHtml(wardName)}">${escapeHtml(wardName)}</option>`
                 }
+                select.innerHTML = ward;
+                selectedOption = select.value;
                 runthrough();
                 function runthrough(){
                     for(let i=0; i<data.length;i++){
                         if(selectedOption == data[i].wardName){
-                            wardId.innerHTML = data[i].wardId;
+                            wardId.textContent = data[i].wardId;
                         }
                     }
                 }
@@ -126,7 +127,7 @@ $(document).ready(function(){
                     selectedOption=select.value;
                     runthrough();
                 })
-                   select.innerHTML = ward;
+
 }})}})
 // fetch ward data
 
@@ -135,7 +136,7 @@ $(document).ready(function(){
     loadData();
     function loadData(){
 $.ajax({
-    url:"http://localhost:3000/database/action",
+    url:"/database/action",
     method:"POST",
     data:{action:'fetchp-w'},
     dataType :"JSON",
@@ -150,22 +151,22 @@ function assignPatient(){
         let match =false;
         let p;
         for(let i=0; i<patientWard.length;i++){
-            if(patientId.innerHTML == patientWard[i].patientId){
+            if(patientId.textContent == patientWard[i].patientId){
                 match = true;
                 p=i;
                 break;
             }
         }
             if(match){
-                alert(patientName.innerHTML + " has already been assigned to "+ wardNom[p].wardName);
+                alert(patientName.textContent + " has already been assigned to "+ (wardNom.find(w => String(w.wardId) === String(patientWard[p].wardId)) || {wardName:"a ward"}).wardName);
             }else{
                 $.ajax({
-                    url:"http://localhost:3000/database/action",
+                    url:"/database/action",
                     method:"POST",
-                    data:{'patientId':patientId.innerHTML,'wardId':wardId.innerHTML,'action':"addp-w"},
+                    data:{'patientId':patientId.textContent,'wardId':wardId.textContent,'action':"addp-w"},
                     dataType:'JSON',
                     success:function(data){
-                        alert(patientName.innerHTML+' has been assigned to '+select.value + " successfully!")
+                        alert(patientName.textContent+' has been assigned to '+select.value + " successfully!")
                         location.reload()
                     }
                 });

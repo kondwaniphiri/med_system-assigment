@@ -6,7 +6,10 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "init-db": "node ./scripts/init-database.js",
-    "verify": "node ./scripts/verify-setup.js"
+    "verify": "node ./scripts/verify-setup.js",
+    "test": "node --test",
+    "migrate-passwords": "node ./scripts/migrate-passwords.js",
+    "setup-pharmacy": "node ./scripts/setup-pharmacy.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -16,11 +19,12 @@
     "express": "^4.21.2",
     "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
-    "http-errors": "~1.6.3",
     "morgan": "^1.10.1",
-    "mysql": "^2.18.1"
+    "mysql2": "^3.24.6"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
-  }
+  },
+  "author": "Kondwani Phiri",
+  "studentId": "21163650"
 }

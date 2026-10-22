@@ -46,6 +46,8 @@ const validatePatient = [
   body("phone")
     .optional({ checkFalsy: true })
     .trim()
+    .isLength({ max: 20 })
+    .withMessage("Phone must not exceed 20 characters")
     .matches(/^[\d\s+()-]+$/)
     .withMessage("Invalid phone number format"),
 
